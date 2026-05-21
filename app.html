@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudentConnect — App Preview</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#F6F4EF;--card:#FFFFFF;--g:#0D1F13;--g2:#152B1C;--amber:#F0A500;--green:#90C96A;--border:#E8E4DC;--text2:#6B6B60;--text3:#A0A090;}
+body{font-family:'DM Sans',sans-serif;background:#E8E4DC;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
+h1{font-size:1.4rem;font-weight:700;color:var(--g);margin-bottom:4px;text-align:center;}
+p.sub{font-size:0.85rem;color:var(--text2);margin-bottom:20px;text-align:center;}
+.phone{width:320px;height:640px;background:var(--bg);border-radius:36px;overflow:hidden;position:relative;border:6px solid #D0CCC0;box-shadow:0 12px 40px rgba(0,0,0,0.15);}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;background:var(--bg);}
+.screen.active{display:flex;}
+.status{height:28px;background:var(--card);display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:11px;color:var(--text3);flex-shrink:0;}
+.topbar{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0;}
+.topbar-title{font-size:16px;font-weight:600;color:var(--g);}
+.content{flex:1;overflow-y:auto;padding:12px 16px 16px;}
+.bottomnav{height:58px;background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;flex-shrink:0;}
+.navitem{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:6px 8px;}
+.navitem i{font-size:20px;color:var(--text3);}
+.navitem span{font-size:9px;color:var(--text3);}
+.navitem.active i{color:var(--amber);}
+.navitem.active span{color:var(--amber);font-weight:600;}
+.hero-card{border-radius:16px;padding:16px;margin-bottom:14px;position:relative;overflow:hidden;min-height:100px;}
+.hero-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.hero-overlay{position:absolute;inset:0;background:rgba(13,31,19,0.72);}
+.hero-content{position:relative;z-index:1;}
+.hero-tag{font-size:10px;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.hero-greeting{font-size:20px;font-weight:700;color:#fff;margin-bottom:2px;}
+.hero-sub{font-size:11px;color:rgba(255,255,255,0.6);}
+.section-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;margin:14px 0 8px;}
+.student-scroll{display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:0 16px 6px;}
+.student-scroll::-webkit-scrollbar{display:none;}
+.scard{flex-shrink:0;width:100px;background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden;cursor:pointer;}
+.scard img{width:100%;height:80px;object-fit:cover;display:block;}
+.scard-body{padding:8px;}
+.scard-name{font-size:11px;font-weight:600;color:var(--g);}
+.scard-uni{font-size:10px;color:var(--text3);}
+.vpill{display:inline-flex;align-items:center;gap:2px;background:#EDFAE5;color:#3A8C1C;font-size:9px;padding:2px 6px;border-radius:20px;margin-top:3px;}
+.hcard{background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:10px;cursor:pointer;}
+.hcard-wrap{position:relative;}
+.hcard-wrap img{width:100%;height:120px;object-fit:cover;display:block;}
+.hprice{position:absolute;top:8px;right:8px;background:var(--amber);color:var(--g);font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px;}
+.hver{position:absolute;bottom:8px;left:8px;background:rgba(144,201,106,0.95);color:#1A5C00;font-size:9px;font-weight:600;padding:3px 8px;border-radius:20px;}
+.hbody{padding:10px;}
+.htitle{font-size:13px;font-weight:600;color:var(--g);margin-bottom:3px;}
+.hloc{font-size:11px;color:var(--text3);}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;}
+.tag{font-size:10px;color:var(--text2);background:#F0EDE6;padding:3px 8px;border-radius:6px;}
+.filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-bottom:12px;}
+.filter-row::-webkit-scrollbar{display:none;}
+.chip{flex-shrink:0;font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2);cursor:pointer;background:var(--card);}
+.chip.on{background:var(--g);border-color:var(--g);color:#fff;font-weight:600;}
+.btn-main{width:100%;background:var(--amber);color:var(--g);border:none;padding:11px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;font-family:'DM Sans',sans-serif;}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sgcard{background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden;cursor:pointer;}
+.sgcard img{width:100%;height:90px;object-fit:cover;display:block;}
+.sgbody{padding:8px;}
+.msg-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.mavatar{width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+.mname{font-size:13px;font-weight:600;color:var(--g);}
+.mpreview{font-size:11px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;}
+.udot{width:8px;height:8px;background:var(--amber);border-radius:50%;margin-left:auto;flex-shrink:0;}
+.group-card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:14px;margin-bottom:10px;cursor:pointer;}
+.post-card{background:#F9F7F2;border-radius:10px;padding:10px;margin-bottom:8px;}
+.ptag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:10px;font-weight:600;}
+.ptag.event{background:#FFF0D0;color:#B07000;}
+.ptag.question{background:#EDF5FF;color:#1A5CB0;}
+.ptag.sale{background:#FFF0F0;color:#B02020;}
+.stat-row{display:flex;gap:8px;margin-bottom:12px;}
+.stat-box{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center;}
+.stat-num{font-size:20px;font-weight:700;color:var(--amber);}
+.stat-lbl{font-size:10px;color:var(--text3);margin-top:2px;}
+.nav-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px;}
+.nbtn{font-size:11px;padding:6px 14px;background:var(--g);color:#fff;border:none;border-radius:20px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.nbtn.hl{background:var(--amber);color:var(--g);font-weight:700;}
+</style>
+</head>
+<body>
+<h1>StudentConnect</h1>
+<p class="sub">Tap the screens or use the buttons below to explore</p>
+
+<div class="phone">
+
+<!-- HOME -->
+<div class="screen active" id="s-home">
+  <div class="status"><span>9:41</span><span>●●●</span></div>
+  <div class="content">
+    <div class="hero-card">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-tag">Welcome back</div>
+        <div class="hero-greeting">Hey Philip 👋</div>
+        <div class="hero-sub">3 new students in Barcelona this week</div>
+      </div>
+    </div>
+    <div class="section-label">Students near you</div>
+    <div class="student-scroll">
+      <div class="scard" onclick="go('s-students')"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&q=80" alt=""><div class="scard-body"><div class="scard-name">Malia, 20</div><div class="scard-uni">UH Manoa</div><div class="vpill">✓ Verified</div></div></div>
+      <div class="scard" onclick="go('s-students')"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80" alt=""><div class="scard-body"><div class="scard-name">Kai, 21</div><div class="scard-uni">UH Manoa</div><div class="vpill">✓ Verified</div></div></div>
+      <div class="scard" onclick="go('s-students')"><img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&q=80" alt=""><div class="scard-body"><div class="scard-name">Erik, 22</div><div class="scard-uni">UiO Norway</div><div class="vpill">✓ Verified</div></div></div>
+      <div class="scard" onclick="go('s-students')"><img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=200&q=80" alt=""><div class="scard-body"><div class="scard-name">Sofia, 20</div><div class="scard-uni">BCN Uni</div><div class="vpill">✓ Verified</div></div></div>
+    </div>
+    <div class="section-label">Housing near campus</div>
+    <div class="hcard" onclick="go('s-housing')">
+      <div class="hcard-wrap"><img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=600&q=80" alt=""><div class="hprice">$950/mo</div><div class="hver">✓ Verified</div></div>
+      <div class="hbody"><div class="htitle">Cozy Room near Waikiki</div><div class="hloc">📍 Waikiki, Honolulu</div><div class="tags"><div class="tag">WiFi</div><div class="tag">Near beach</div><div class="tag">Parking</div></div></div>
+    </div>
+  </div>
+  <div class="bottomnav">
+    <div class="navitem active" onclick="go('s-home')"><i class="ti ti-home"></i><span>Home</span></div>
+    <div class="navitem" onclick="go('s-students')"><i class="ti ti-users"></i><span>Students</span></div>
+    <div class="navitem" onclick="go('s-housing')"><i class="ti ti-building"></i><span>Housing</span></div>
+    <div class="navitem" onclick="go('s-groups')"><i class="ti ti-school"></i><span>Groups</span></div>
+    <div class="navitem" onclick="go('s-messages')"><i class="ti ti-message"></i><span>Messages</span></div>
+    <div class="navitem" onclick="go('s-profile')"><i class="ti ti-user"></i><span>Me</span></div>
+  </div>
+</div>
+
+<!-- STUDENTS -->
+<div class="screen" id="s-students">
+  <div class="status"><span>9:41</span><span>●●●</span></div>
+  <div class="topbar"><div class="topbar-title">Students</div><i class="ti ti-search" style="font-size:18px;color:var(--g);"></i></div>
+  <div class="content">
+    <div class="filter-row"><div class="chip on">All</div><div class="chip">My uni</div><div class="chip">Hometown</div><div class="chip">Barcelona</div><div class="chip">Norway</div></div>
+    <div class="sgrid">
+      <div class="sgcard" onclick="go('s-profile')"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=300&q=80" alt=""><div class="sgbody"><div class="scard-name">Malia, 20</div><div class="scard-uni">Hawaiian Studies</div><div class="vpill">✓ Verified</div></div></div>
+      <div class="sgcard" onclick="go('s-profile')"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&q=80" alt=""><div class="sgbody"><div class="scard-name">Kai, 21</div><div class="scard-uni">Computer Science</div><div class="vpill">✓ Verified</div></div></div>
+      <div class="sgcard" onclick="go('s-profile')"><img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=300&q=80" alt=""><div class="sgbody"><div class="scard-name">Erik, 22</div><div class="scard-uni">Economics · UiO</div><div class="vpill">✓ Verified</div></div></div>
+      <div class="sgcard" onclick="go('s-profile')"><img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=300&q=80" alt=""><div class="sgbody"><div class="scard-name">Sofia, 20</div><div class="scard-uni">Business · BCN</div><div class="vpill">✓ Verified</div></div></div>
+      <div class="sgcard" onclick="go('s-profile')"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&q=80" alt=""><div class="sgbody"><div class="scard-name">Lena, 23</div><div class="scard-uni">Medicine · Berlin</div><div class="vpill">✓ Verified</div></div></div>
+      <div class="sgcard" onclick="go('s-profile')"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&q=80" alt=""><div class="sgbody"><div class="scard-name">James, 21</div><div class="scard-uni">Law · NYU</div><div class="vpill">✓ Verified</div></div></div>
+    </div>
+  </div>
+  <div class="bottomnav">
+    <div class="navitem" onclick="go('s-home')"><i class="ti ti-home"></i><span>Home</span></div>
+    <div class="navitem active" onclick="go('s-students')"><i class="ti ti-users"></i><span>Students</span></div>
+    <div class="navitem" onclick="go('s-housing')"><i class="ti ti-building"></i><span>Housing</span></div>
+    <div class="navitem" onclick="go('s-groups')"><i class="ti ti-school"></i><span>Groups</span></div>
+    <div class="navitem" onclick="go('s-messages')"><i class="ti ti-message"></i><span>Messages</span></div>
+    <div class="navitem" onclick="go('s-profile')"><i class="ti ti-user"></i><span>Me</span></div>
+  </div>
+</div>
+
+<!-- HOUSING -->
+<div class="screen" id="s-housing">
+  <div class="status"><span>9:41</span><span>●●●</span></div>
+  <div class="topbar"><div class="topbar-title">Housing</div><i class="ti ti-adjustments" style="font-size:18px;color:var(--g);"></i></div>
+  <div class="content">
+    <div class="filter-row"><div class="chip on">$500–$1200</div><div class="chip">Near campus</div><div class="chip">Roommates</div><div class="chip">Private</div></div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:10px;">4 verified listings available</div>
+    <div class="hcard"><div class="hcard-wrap"><img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=600&q=80" alt=""><div class="hprice">$950/mo</div><div class="hver">✓ Verified landlord</div></div><div class="hbody"><div class="htitle">Cozy Room near Waikiki Beach</div><div class="hloc">📍 Waikiki, Honolulu</div><div class="tags"><div class="tag">WiFi</div><div class="tag">Parking</div><div class="tag">Beach</div></div><button class="btn-main" onclick="go('s-messages')">Contact landlord</button></div></div>
+    <div class="hcard"><div class="hcard-wrap"><img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80" alt=""><div class="hprice">$750/mo</div><div class="hver">✓ Verified landlord</div></div><div class="hbody"><div class="htitle">Studio in Manoa Valley</div><div class="hloc">📍 Manoa, Honolulu</div><div class="tags"><div class="tag">WiFi</div><div class="tag">Near UH</div><div class="tag">Quiet</div></div><button class="btn-main" onclick="go('s-messages')">Contact landlord</button></div></div>
+    <div class="hcard"><div class="hcard-wrap"><img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80" alt=""><div class="hprice">$1100/mo</div><div class="hver">✓ Verified landlord</div></div><div class="hbody"><div class="htitle">Modern Apartment, Downtown</div><div class="hloc">📍 Downtown Honolulu</div><div class="tags"><div class="tag">Gym</div><div class="tag">Ocean view</div><div class="tag">WiFi</div></div><button class="btn-main" onclick="go('s-messages')">Contact landlord</button></div></div>
+  </div>
+  <div class="bottomnav">
+    <div class="navitem" onclick="go('s-home')"><i class="ti ti-home"></i><span>Home</span></div>
+    <div class="navitem" onclick="go('s-students')"><i class="ti ti-users"></i><span>Students</span></div>
+    <div class="navitem active" onclick="go('s-housing')"><i class="ti ti-building"></i><span>Housing</span></div>
+    <div class="navitem" onclick="go('s-groups')"><i class="ti ti-school"></i><span>Groups</span></div>
+    <div class="navitem" onclick="go('s-messages')"><i class="ti ti-message"></i><span>Messages</span></div>
+    <div class="navitem" onclick="go('s-profile')"><i class="ti ti-user"></i><span>Me</span></div>
+  </div>
+</div>
+
+<!-- GROUPS -->
+<div class="screen" id="s-groups">
+  <div class="status"><span>9:41</span><span>●●●</span></div>
+  <div class="topbar"><div class="topbar-title">University Groups</div><i class="ti ti-plus" style="font-size:18px;color:var(--g);"></i></div>
+  <div class="content">
+    <div class="group-card" onclick="go('s-groupfeed')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=80&q=80" alt="" style="width:40px;height:40px;border-radius:10px;object-fit:cover;"><div><div style="font-size:14px;font-weight:600;color:var(--g);">Hawaii Pacific University</div><div style="font-size:11px;color:var(--text3);">1,247 members · 99 online</div></div></div>
+      <div style="display:flex;gap:6px;font-size:11px;"><span style="background:#FFF8E6;color:#B07000;padding:3px 8px;border-radius:8px;">2 new posts today</span><span style="background:#EDFAE5;color:#3A8C1C;padding:3px 8px;border-radius:8px;">✓ Verified</span></div>
+    </div>
+    <div class="group-card" onclick="go('s-groupfeed')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><img src="https://images.unsplash.com/photo-1562774053-701939374585?w=80&q=80" alt="" style="width:40px;height:40px;border-radius:10px;object-fit:cover;"><div><div style="font-size:14px;font-weight:600;color:var(--g);">Universitat de Barcelona</div><div style="font-size:11px;color:var(--text3);">3,841 members · 214 online</div></div></div>
+      <div style="display:flex;gap:6px;font-size:11px;"><span style="background:#FFF8E6;color:#B07000;padding:3px 8px;border-radius:8px;">5 new posts today</span><span style="background:#EDFAE5;color:#3A8C1C;padding:3px 8px;border-radius:8px;">✓ Verified</span></div>
+    </div>
+    <div class="group-card" onclick="go('s-groupfeed')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=80&q=80" alt="" style="width:40px;height:40px;border-radius:10px;object-fit:cover;"><div><div style="font-size:14px;font-weight:600;color:var(--g);">University of Oslo</div><div style="font-size:11px;color:var(--text3);">2,103 members · 87 online</div></div></div>
+      <div style="display:flex;gap:6px;font-size:11px;"><span style="background:#FFF8E6;color:#B07000;padding:3px 8px;border-radius:8px;">1 new post today</span><span style="background:#EDFAE5;color:#3A8C1C;padding:3px 8px;border-radius:8px;">✓ Verified</span></div>
+    </div>
+  </div>
+  <div class="bottomnav">
+    <div class="navitem" onclick="go('s-home')"><i class="ti ti-home"></i><span>Home</span></div>
+    <div class="navitem" onclick="go('s-students')"><i class="ti ti-users"></i><span>Students</span></div>
+    <div class="navitem" onclick="go('s-housing')"><i class="ti ti-building"></i><span>Housing</span></div>
+    <div class="navitem active" onclick="go('s-groups')"><i class="ti ti-school"></i><span>Groups</span></div>
+    <div class="navitem" onclick="go('s-messages')"><i class="ti ti-message"></i><span>Messages</span></div>
+    <div class="navitem" onclick="go('s-profile')"><i class="ti ti-user"></i><span>Me</span></div>
+  </div>
+</div>
+
+<!-- GROUP FEED -->
+<div class="screen" id="s-groupfeed">
+  <div class="status"><span>9:41</span><span>●●●</span></div>
+  <div class="topbar"><div style="display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="go('s-groups')"><i class="ti ti-arrow-left" style="font-size:16px;color:var(--g);"></i><div class="topbar-title">HPU Group</div></div><i class="ti ti-search" style="font-size:18px;color:var(--g);"></i></div>
+  <div class="content">
+    <div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;">
+      <div style="flex-shrink:0;font-size:10px;padding:4px 10px;border-radius:20px;background:var(--amber);color:var(--g);font-weight:600;">All 4</div>
+      <div style="flex-shrink:0;font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text2);">Events 2</div>
+      <div style="flex-shrink:0;font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text2);">Questions 1</div>
+      <div style="flex-shrink:0;font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:var(--text2);">For sale 1</div>
+    </div>
+    <div style="background:#F0EDE6;border-radius:10px;padding:10px;display:flex;gap:8px;align-items:center;margin-bottom:10px;cursor:pointer;"><span style="font-size:18px;color:var(--text3);">+</span><span style="font-size:12px;color:var(--text3);">Share something with HPU students...</span></div>
+    <div class="post-card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&q=80" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;"><div style="flex:1;font-size:11px;font-weight:600;color:var(--g);">Kai <span style="font-weight:400;color:var(--text3);">· CS · 3rd year</span></div><div class="ptag event">Event</div></div><div style="font-size:12px;color:var(--g);line-height:1.5;margin-bottom:6px;">🏄 Surf club this Saturday 6am! North Shore. Beginners welcome, boards provided.</div><div style="font-size:10px;color:var(--text3);display:flex;gap:10px;"><span>24 likes</span><span>8 comments</span><span>3h ago</span></div></div>
+    <div class="post-card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=60&q=80" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;"><div style="flex:1;font-size:11px;font-weight:600;color:var(--g);">Leilani <span style="font-weight:400;color:var(--text3);">· Business · 2nd year</span></div><div class="ptag question">Question</div></div><div style="font-size:12px;color:var(--g);line-height:1.5;margin-bottom:6px;">Has anyone taken ECON 301 with the new professor? Heard the material changed a lot.</div><div style="font-size:10px;color:var(--text3);display:flex;gap:10px;"><span>7 likes</span><span>12 comments</span><span>5h ago</span></div></div>
+    <div class="post-card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=60&q=80" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;"><div style="flex:1;font-size:11px;font-weight:600;color:var(--g);">Marcus <span style="font-weight:400;color:var(--text3);">· Engineering · 4th year</span></div><div class="ptag sale">For sale</div></div><div style="font-size:12px;color:var(--g);line-height:1.5;margin-bottom:6px;">Selling my Calculus textbook — barely used. $25. DM me!</div><div style="font-size:10px;color:var(--text3);display:flex;gap:10px;"><span>3 likes</span><span>2 comments</span><span>Yesterday</span></div></div>
+    <div class="post-card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=60&q=80" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;"><div style="flex:1;font-size:11px;font-weight:600;color:var(--g);">HPU Admin <span style="font-weight:400;color:var(--text3);">· International Office</span></div><div class="ptag event">Event</div></div><div style="font-size:12px;color:var(--g);line-height:1.5;margin-bottom:6px;">🎉 International Student Welcome Night — Friday 7pm, Campus Center. Free food!</div><div style="font-size:10px;color:var(--text3);display:flex;gap:10px;"><span>89 likes</span><span>34 comments</span><span>2 days ago</span></div></div>
+  </div>
+  <div class="bottomnav">
+    <div class="navitem" onclick="go('s-home')"><i class="ti ti-home"></i><span>Home</span></div>
+    <div class="navitem" onclick="go('s-students')"><i class="ti ti-users"></i><span>Students</span></div>
+    <div class="navitem" onclick="go('s-housing')"><i class="ti ti-building"></i><span>Housing</span></div>
+    <div class="navitem active" onclick="go('s-groups')"><i class="ti ti-school"></i><span>Groups</span></div>
+    <div class="navitem" onclick="go('s-messages')"><i class="ti ti-message"></i><span>Messages</span></div>
+    <div class="navitem" onclick="go('s-profile')"><i class="ti ti-user"></i><span>Me</span></div>
+  </div>
+</div>
+
+<!-- MESSAGES -->
+<div class="screen" id="s-messages">
+  <div class="status"><span>9:41</span><span>●●●</span></div>
+  <div class="topbar"><div class="topbar-title">Messages</div><i class="ti ti-edit" style="font-size:18px;color:var(--g);"></i></div>
+  <div class="content">
+    <div style="font-size:11px;color:var(--amber);font-weight:600;margin-bottom:8px;">1 new request</div>
+    <div style="background:#FFFBF0;border:1px solid #FFE0A0;border-radius:12px;padding:12px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=80&q=80" alt="" class="mavatar"><div><div class="mname">Alana Kealoha</div><div style="font-size:10px;background:#EDFAE5;color:#3A8C1C;padding:2px 7px;border-radius:10px;display:inline-block;margin-top:2px;">Same university</div></div></div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:10px;">Hi! I'm looking for a roommate in Manoa. Are you still searching?</div>
+      <div style="display:flex;gap:8px;"><button style="flex:1;background:var(--green);color:#0D1F13;border:none;padding:8px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">Accept</button><button style="flex:1;background:#F0EDE6;color:var(--text2);border:none;padding:8px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;">Decline</button></div>
+    </div>
+    <div style="font-size:10px;color:var(--text3);font-weight:600;margin-bottom:8px;letter-spacing:0.08em;">CONVERSATIONS</div>
+    <div class="msg-item"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=80&q=80" alt="" class="mavatar"><div style="flex:1;min-width:0;"><div class="mname">Malia Wong</div><div class="mpreview">We should go surfing sometime!</div></div><div style="font-size:10px;color:var(--text3);">10:45</div></div>
+    <div class="msg-item"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=80&q=80" alt="" class="mavatar"><div style="flex:1;min-width:0;"><div class="mname">Sarah Lau <span style="font-size:9px;color:var(--green);">· Landlord</span></div><div class="mpreview">Apartment available from September</div></div><div class="udot"></div></div>
+    <div class="msg-item"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=80&q=80" alt="" class="mavatar"><div style="flex:1;min-width:0;"><div class="mname">Keoni Kalani</div><div class="mpreview">Hey brah! I saw you're into marine...</div></div><div style="font-size:10px;color:var(--text3);">Yesterday</div></div>
+  </div>
+  <div class="bottomnav">
+    <div class="navitem" onclick="go('s-home')"><i class="ti ti-home"></i><span>Home</span></div>
+    <div class="navitem" onclick="go('s-students')"><i class="ti ti-users"></i><span>Students</span></div>
+    <div class="navitem" onclick="go('s-housing')"><i class="ti ti-building"></i><span>Housing</span></div>
+    <div class="navitem" onclick="go('s-groups')"><i class="ti ti-school"></i><span>Groups</span></div>
+    <div class="navitem active" onclick="go('s-messages')"><i class="ti ti-message"></i><span>Messages</span></div>
+    <div class="navitem" onclick="go('s-profile')"><i class="ti ti-user"></i><span>Me</span></div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="screen" id="s-profile">
+  <div class="status"><span>9:41</span><span>●●●</span></div>
+  <div class="topbar"><div class="topbar-title">My Profile</div><i class="ti ti-settings" style="font-size:18px;color:var(--g);"></i></div>
+  <div class="content">
+    <div style="background:var(--card);border-radius:14px;border:1px solid var(--border);padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;">
+      <div style="width:54px;height:54px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--amber);">P</div>
+      <div><div style="font-size:16px;font-weight:700;color:var(--g);">Philip</div><div style="font-size:11px;color:var(--text3);">Hawaii Pacific University</div><div class="vpill" style="margin-top:4px;">✓ Verified student</div></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-num">12</div><div class="stat-lbl">Connections</div></div>
+      <div class="stat-box"><div class="stat-num">4</div><div class="stat-lbl">Saved homes</div></div>
+      <div class="stat-box"><div class="stat-num">4.8</div><div class="stat-lbl">Rating</div></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:10px;"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">About</div><div style="font-size:13px;color:var(--g);line-height:1.6;">Cross country team captain. Hosting boat parties in Waikiki. Looking for students heading to Barcelona.</div></div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;"><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Interests</div><div style="display:flex;flex-wrap:wrap;gap:6px;"><div class="tag">🏃 Running</div><div class="tag">🌊 Surfing</div><div class="tag">📈 Finance</div><div class="tag">🤖 AI</div><div class="tag">⛵ Boating</div></div></div>
+    <button class="btn-main" onclick="go('s-messages')">Send message</button>
+  </div>
+  <div class="bottomnav">
+    <div class="navitem" onclick="go('s-home')"><i class="ti ti-home"></i><span>Home</span></div>
+    <div class="navitem" onclick="go('s-students')"><i class="ti ti-users"></i><span>Students</span></div>
+    <div class="navitem" onclick="go('s-housing')"><i class="ti ti-building"></i><span>Housing</span></div>
+    <div class="navitem" onclick="go('s-groups')"><i class="ti ti-school"></i><span>Groups</span></div>
+    <div class="navitem" onclick="go('s-messages')"><i class="ti ti-message"></i><span>Messages</span></div>
+    <div class="navitem active" onclick="go('s-profile')"><i class="ti ti-user"></i><span>Me</span></div>
+  </div>
+</div>
+
+</div>
+
+<div class="nav-btns">
+  <button class="nbtn" onclick="go('s-home')">Home</button>
+  <button class="nbtn" onclick="go('s-students')">Students</button>
+  <button class="nbtn" onclick="go('s-housing')">Housing</button>
+  <button class="nbtn hl" onclick="go('s-groups')">Groups ★</button>
+  <button class="nbtn" onclick="go('s-messages')">Messages</button>
+  <button class="nbtn" onclick="go('s-profile')">Profile</button>
+</div>
+
+<script>
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>
